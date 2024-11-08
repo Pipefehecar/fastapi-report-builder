@@ -1,0 +1,14 @@
+# docker-compose.yml
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/app
+    ports:
+      - "9802:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
