@@ -15,7 +15,7 @@ app = FastAPI(
 async def healthCheck():
     return {"status": "File Procesator is ok!"}
 
-@app.post("/execute_task/")
+@app.post("/execute_task/", summary="Execute task")
 async def execute_task(request: TaskRequest, background_tasks: BackgroundTasks):
     task_id = str(uuid4())
     TaskStore.create_task(task_id)
@@ -23,9 +23,12 @@ async def execute_task(request: TaskRequest, background_tasks: BackgroundTasks):
     background_tasks.add_task(report.generate_report, task_id, request.context)
     return {"task_id": task_id, "status": "Task is in progress"}
 
-@app.get("/task_status/{task_id}")
+@app.get("/task_status/{task_id}", summary="Get task status")
 async def task_status(task_id: str):
     task = TaskStore.get_task(task_id)
     if not task:
         return {"error": "Task not found"}
-    return {"task_id": task_id, "status": task["status"], "progress": task["progress"]}
+
+    response = {"task_id": task_id, "status": task["status"], "progress": task["progress"]}
+    TaskStore.delete_task(task_id)
+    return response

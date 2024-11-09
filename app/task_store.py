@@ -15,4 +15,10 @@ class TaskStore:
     def update_task(cls, task_id: str, status: str, progress: int) -> None:
         if task_id in cls._tasks:
             cls._tasks[task_id]["status"] = status
-            cls._tasks[task_id]["progress"] = progress 
+            cls._tasks[task_id]["progress"] = progress
+
+    @classmethod
+    def delete_task(cls, task_id: str) -> None:
+        if task_id in cls._tasks:
+            del cls._tasks[task_id]
+
